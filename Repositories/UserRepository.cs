@@ -58,9 +58,7 @@ namespace LazyOff.Repositories
          
         public void Update(User updatedUser)
         {
-            var user = users.ElementAt(updatedUser.ID - 1);
-            var index = users.IndexOf(user);
-            users[index] = updatedUser;
+            users[updatedUser.ID - 1] = updatedUser;
         }
 
         public void Delete(User user)

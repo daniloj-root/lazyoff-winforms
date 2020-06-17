@@ -61,33 +61,36 @@ namespace LazyOff.Views
         private void passwordBox_Leave(object sender, EventArgs e)
         {
             var box = sender as TextBox;
-            if (box.Text.Trim() == string.Empty)
+            if (box.Text.Trim() != string.Empty)
+                return;
+            
+            box.UseSystemPasswordChar = false;
+            switch (box.Name)
             {
-                box.UseSystemPasswordChar = false;
-                if (box.Name == "passwordBox")
-                {
+                case "passwordBox":
                     box.Text = language == Language.PORTUGUESE ?
-                                                   "Digite sua senha..." :
-                                                   "Insert your password...";
-                }
-                else if (box.Name == "confirmPasswordBox")
-                {
+                        "Digite sua senha..." :
+                        "Insert your password...";
+                    break;
+                case "confirmPasswordBox":
                     box.Text = language == Language.PORTUGUESE ?
-                                                  "Confirme sua senha..." :
-                                                  "Confirm your password...";
-                }
+                        "Confirme sua senha..." :
+                        "Confirm your password...";
+                    break;
             }
         }
 
         private void backButton_Click(object sender, EventArgs e)
         {
-            new frmAdmin(userRepository, language);
+            new frmAdmin(userRepository, language).Show();
             this.Dispose();
         }
 
         private void addButton_Click(object sender, EventArgs e)
         {
-            new frmSignUp(userRepository, language, false).ShowDialog();
+            var signUpScreen = new frmSignUp(userRepository, language, false);
+            signUpScreen.ShowDialog();
+            userRepository = signUpScreen.userRepository;
         }
 
         private void editButton_Click(object sender, EventArgs e)
@@ -105,7 +108,6 @@ namespace LazyOff.Views
 
                 return;
             }
-
 
             if (userRepository.GetById(int.Parse(idBox.Text)) == null)
             {
@@ -127,8 +129,7 @@ namespace LazyOff.Views
             Reload();
 
         }
-
-
+        
         private void deleteButton_Click(object sender, EventArgs e)
         {
             if (idBox.Text == null)
@@ -146,8 +147,7 @@ namespace LazyOff.Views
                 return;
             }
 
-            var user = userRepository.GetById(GetUser().ID);
-
+            User user;
             if ((user = userRepository.GetById(int.Parse(idBox.Text))) == null)
             {
                 MessageBox.Show(language == Language.PORTUGUESE ?
@@ -158,12 +158,9 @@ namespace LazyOff.Views
                        "Error",
                        MessageBoxButtons.OK,
                        MessageBoxIcon.Error);
-
-                userRepository.Add(user);
             }
 
             userRepository.Delete(user);
-
             Reload();
         }
 
@@ -174,6 +171,8 @@ namespace LazyOff.Views
                 ID = int.Parse(idBox.Text),
                 Name = nameBox.Text,
                 Surname = surnameBox.Text,
+                Address = addressBox.Text,
+                Number = numberBox.Text,
                 Username = usernameBox.Text,
                 Password = usernameBox.Text,
                 BirthDate = DateTime.Parse(birthBox.Text),
@@ -190,7 +189,7 @@ namespace LazyOff.Views
         {
             if (dgvUsers.Rows[e.RowIndex] != null)
             {
-                DataGridViewRow line = dgvUsers.Rows[e.RowIndex];
+                var line = dgvUsers.Rows[e.RowIndex];
 
                 int ID = Convert.ToInt32(line.Cells[0].Value.ToString());
 

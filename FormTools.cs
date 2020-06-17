@@ -14,11 +14,11 @@ namespace LazyOff
         {
             foreach (Control control in form.Controls)
             {
-                if (control is TextBox box && box.Text.Trim().Length == 0)
-                {
-                    if (box.Name != "addressBox" && box.Name != "addressNumberBox")
-                        return true;
-                }
+                if (!(control is TextBox box) || box.Text.Trim().Length != 0) 
+                    continue;
+                
+                if (box.Name != "addressBox" && box.Name != "addressNumberBox")
+                    return true;
             }
             return false;
         }

@@ -19,7 +19,7 @@ namespace LazyOff
     public partial class frmSignUp : Form
     {
         private bool useUserDashboard;
-        private UserRepository userRepository;
+        public UserRepository userRepository;
         private Language language;
         public frmSignUp()
         {

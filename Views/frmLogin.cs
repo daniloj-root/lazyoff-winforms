@@ -47,25 +47,18 @@ namespace LazyOff.Views
         private void passwordBox_MouseClick(object sender, MouseEventArgs e)
         {
             var box = sender as TextBox;
-            if (box.Text.Contains("Digite sua")
-                || box.Text.Contains("Insert your"))
-            {
-                box.Text = string.Empty;
-                box.UseSystemPasswordChar = true;
-            }
+            if (!box.Text.Contains("Digite sua") && !box.Text.Contains("Insert your")) return;
+            box.Text = string.Empty;
+            box.UseSystemPasswordChar = true;
         }
 
         private void passwordBox_Leave(object sender, EventArgs e)
         {
-            if (passwordBox.Text.Trim() == string.Empty)
-            {
-                passwordBox.UseSystemPasswordChar = false;
-                passwordBox.Text = language == Language.PORTUGUESE ?
-                                               "Digite sua senha..." :
-                                               "Insert your password...";
-
-
-            }
+            if (passwordBox.Text.Trim() != string.Empty) return;
+            passwordBox.UseSystemPasswordChar = false;
+            passwordBox.Text = language == Language.PORTUGUESE ?
+                "Digite sua senha..." :
+                "Insert your password...";
         }
 
         private void loginButton_Click(object sender, EventArgs e)
@@ -98,21 +91,19 @@ namespace LazyOff.Views
         private void textBox_Leave(object sender, EventArgs e)
         {
             var box = (TextBox)sender;
-            if (box.Text.Trim() == string.Empty)
-            {
-                string[] accName = box.AccessibleName.Split(':');
-                string pt = accName[0];
-                string eng = accName[1];
+            if (box.Text.Trim() != string.Empty) return;
+            var accName = box.AccessibleName.Split(':');
+            var pt = accName[0];
+            var eng = accName[1];
 
-                switch (this.language)
-                {
-                    case Language.PORTUGUESE:
-                        box.Text = $"Digite seu {pt}...";
-                        break;
-                    case Language.ENGLISH:
-                        box.Text = $"Insert your {eng}...";
-                        break;
-                }
+            switch (this.language)
+            {
+                case Language.PORTUGUESE:
+                    box.Text = $"Digite seu {pt}...";
+                    break;
+                case Language.ENGLISH:
+                    box.Text = $"Insert your {eng}...";
+                    break;
             }
         }
 
@@ -128,13 +119,13 @@ namespace LazyOff.Views
 
         private void languageComboBox_SelectedValueChanged(object sender, EventArgs e)
         {
-            var languageComboBox = sender as ComboBox;
-            switch (languageComboBox.Text)
+            var comboBox = sender as ComboBox;
+            switch (comboBox.Text)
             {
                 case "Português (PT-BR)":
                     language = Language.PORTUGUESE;
                     languageLabel.Text = "Idioma";
-                    languageComboBox.Text = "Português (PT-BR)";
+                    comboBox.Text = "Português (PT-BR)";
                     usernameLabel.Text = "Usuário";
                     usernameBox.Text = "Digite seu nome de usuário...";
                     closeButton.Text = "Sair";
@@ -146,7 +137,7 @@ namespace LazyOff.Views
                 case "English (US)":
                     language = Language.ENGLISH;
                     languageLabel.Text = "Language";
-                    languageComboBox.Text = "English (US)";
+                    comboBox.Text = "English (US)";
                     usernameBox.Text = "Insert your username...";
                     usernameLabel.Text = "Username";
                     closeButton.Text = "Exit";
